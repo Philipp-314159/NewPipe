@@ -2,29 +2,22 @@ package org.schabi.newpipe.player.helper;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.media.AudioManagerCompat;
 
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 
 public class AudioReactor implements AnalyticsListener {
 
-    private static final int STREAM_TYPE = AudioManager.STREAM_MUSIC;
-
     private final ExoPlayer player;
     private final Context context;
-    private final AudioManager audioManager;
 
     public AudioReactor(@NonNull final Context context,
                         @NonNull final ExoPlayer player) {
         this.player = player;
         this.context = context;
-        this.audioManager = ContextCompat.getSystemService(context, AudioManager.class);
         player.addAnalyticsListener(this);
         // Per-app volume: restore NewPipe's own player volume
         player.setVolume(context.getSharedPreferences("player_volume", Context.MODE_PRIVATE)
@@ -45,10 +38,10 @@ public class AudioReactor implements AnalyticsListener {
     }
 
     public void setVolume(final int volume) {
-        final float v = volume / 100f;
-        player.setVolume(v);
+        final float level = volume / 100f;
+        player.setVolume(level);
         context.getSharedPreferences("player_volume", Context.MODE_PRIVATE)
-                .edit().putFloat("v", v).apply();
+                .edit().putFloat("v", level).apply();
     }
 
     public int getMaxVolume() {
