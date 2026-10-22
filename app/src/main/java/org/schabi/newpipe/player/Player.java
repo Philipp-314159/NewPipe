@@ -640,7 +640,7 @@ public final class Player implements PlaybackListener, Listener {
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
                 .build(),
-            true);
+            false);
 
         audioReactor = new AudioReactor(context, simpleExoPlayer);
 
@@ -1338,7 +1338,7 @@ public final class Player implements PlaybackListener, Listener {
                         .setUsage(C.USAGE_MEDIA)
                         .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
                         .build(),
-                wasMuted);
+            false);
 
         UIs.call(playerUi -> playerUi.onMuteUnmuteChanged(!wasMuted));
         notifyPlaybackUpdateToListeners();
