@@ -26,6 +26,9 @@ public class AudioReactor implements AnalyticsListener {
         this.context = context;
         this.audioManager = ContextCompat.getSystemService(context, AudioManager.class);
         player.addAnalyticsListener(this);
+        // Per-app volume: restore NewPipe's own player volume
+        player.setVolume(context.getSharedPreferences("player_volume", Context.MODE_PRIVATE)
+                .getFloat("v", 1f));
     }
 
     public void dispose() {
@@ -38,15 +41,18 @@ public class AudioReactor implements AnalyticsListener {
     //////////////////////////////////////////////////////////////////////////*/
 
     public int getVolume() {
-        return audioManager.getStreamVolume(STREAM_TYPE);
+        return Math.round(player.getVolume() * 100);
     }
 
     public void setVolume(final int volume) {
-        audioManager.setStreamVolume(STREAM_TYPE, volume, 0);
+        final float v = volume / 100f;
+        player.setVolume(v);
+        context.getSharedPreferences("player_volume", Context.MODE_PRIVATE)
+                .edit().putFloat("v", v).apply();
     }
 
     public int getMaxVolume() {
-        return AudioManagerCompat.getStreamMaxVolume(audioManager, STREAM_TYPE);
+        return 100;
     }
 
     /*//////////////////////////////////////////////////////////////////////////
